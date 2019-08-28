@@ -57,8 +57,29 @@ function agregarTarea(e){
         
 
         guardarEnLS(tareaTexto);
+
     }
     
+}
+
+function guardarEnLS(tareaTexto){
+    let tareas;
+    tareas = obtenerDeLocalStorage();
+
+    tareas.push(tareaTexto);
+
+    localStorage.setItem('tareas', JSON.stringify(tareas));
+
+}
+
+function obtenerDeLocalStorage(){
+    let tareas;
+    if(localStorage.getItem('tareas')===null){
+        tareas = [];
+    }else{
+        tareas =JSON.parse(localStorage.getItem('tareas'));
+    }
+    return tareas;
 }
 
 function borrarTarea(e){
