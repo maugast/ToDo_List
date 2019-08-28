@@ -1,0 +1,49 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body{
+    background: #000;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+
+h1{
+    font-family: 'Fredoka One', cursive;
+    color: black;
+}
+
+.main{
+    margin-top: 20px;
+    font-family: 'Actor', sans-serif;
+    max-width: 450px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+#widget{
+    color: #fff;
+    width: 280px;
+    height: 100%;
+}
+
+#fecha, #hora-actual{
+    background: rgba(0, 0, 0, 0.5);
+    width: 280px;
+}
+
+#fecha p{
+    display: inline-block;
+}
+
+#hora-actual{
+    padding-left: 56px;
+}
+
+#hora-actual p{
+    font-size: 3rem;
+}
