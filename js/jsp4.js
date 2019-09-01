@@ -18,6 +18,8 @@ function cargarEventListeners(){
     limpiarBtn.addEventListener('click', limpiarTareas);
     tareaInput.addEventListener('blur', mostrarEstadoInput);
     tareaInput.addEventListener('input', inputActivo);
+    document.addEventListener('DOMContentLoaded', cambiarFondo);
+    document.addEventListener('DOMContentLoaded', localStorageListo);
 }
 
 
@@ -29,7 +31,7 @@ cambiarFondo();
 
 function agregarTarea(e){
     e.preventDefault();
-
+    
     if(validarInput()){
         mostrarEstadoInput();
 
@@ -55,19 +57,24 @@ function agregarTarea(e){
 
         tareaInput.value = '';
         
+        let tareas = document.getElementsByTagName('li');
+        let tareasArray = Array.from(tareas);
+
+        if(tareasArray.length >= 0){
+            
+            tareasArray.forEach(function(item, index){
+                tarea.setAttribute('id',index);
+            });
+        }
 
         guardarEnLS(tareaTexto);
-
     }
-    
 }
 
-function guardarEnLS(tareaTexto){
+function guardarEnLS(tarea){
     let tareas;
     tareas = obtenerDeLocalStorage();
-
-    tareas.push(tareaTexto);
-
+    tareas.push(tarea);
     localStorage.setItem('tareas', JSON.stringify(tareas));
 
 }
@@ -78,22 +85,93 @@ function obtenerDeLocalStorage(){
         tareas = [];
     }else{
         tareas =JSON.parse(localStorage.getItem('tareas'));
+
     }
     return tareas;
+    
 }
+
+
+function localStorageListo(){
+
+    let tareas;
+
+    tareas = obtenerDeLocalStorage();
+
+    tareas.forEach(function(tarea, index){
+        const tareaB = document.createElement('li');
+        const borrarBtnB = document.createElement('i');
+
+        tareaB.textContent = tarea;
+
+        tareaB.style.color = 'white';
+        tareaB.classList.add('mb-3');
+
+        tareaTexto = tareaB.textContent;
+
+        borrarBtnB.classList.add('fas');
+        borrarBtnB.classList.add('fa-window-close');
+        borrarBtnB.classList.add('float-right');
+        borrarBtnB.classList.add('borrar');
+        borrarBtnB.style.color = 'white';
+
+        listadoTareas.appendChild(tareaB);
+        tareaB.appendChild(borrarBtnB);
+
+        tareaInput.value = '';
+
+        tareaB.setAttribute('id',index);
+        
+    });
+}
+
 
 function borrarTarea(e){
     if(e.target.classList.contains('borrar')){
         e.target.parentElement.remove();
+
+        reasignarIds();
+
+        borrarDeLocalStorage(e.target.parentElement.id);
     }
-    
 }
+
+
+function reasignarIds(){
+    let liElements = document.getElementsByTagName('li');
+    let arrayLi = Array.from(liElements);
+
+    arrayLi.forEach(function(item,index){
+         item.setAttribute('id',index);
+    });
+}
+
+
+
+function borrarDeLocalStorage(ide){
+    let tareas, indice;
+    indice = ide;
+    tareas = obtenerDeLocalStorage();
+
+     tareas.forEach(function(item,index){
+        if(indice == index){
+            
+            tareas.splice(index,1);
+        }
+    });
+
+    localStorage.setItem('tareas', JSON.stringify(tareas));
+}
+
 
 function limpiarTareas(e){
     e.preventDefault();
     listadoTareas.innerHTML='';
     tareaInput.value = '';
+
+    localStorage.clear();
 }
+
 
 function validarInput(){
 
@@ -107,6 +185,7 @@ function validarInput(){
 
     return error;
 }
+
 
 function mostrarEstadoInput(){
 
@@ -142,10 +221,12 @@ function mostrarEstadoInput(){
          
 }
 
+
 function inputActivo (){
     errorBox.innerHTML ='';
     tareaInput.classList.remove('is-invalid');
 }
+
 
 function cambiarFondo(){
 
@@ -187,7 +268,7 @@ function cambiarFondo(){
 
 }
 
-//Widget y Reloj
+//Fecha y Hora
 
 function actualizarDia(){
     const diaNumero     = document.querySelector('#dia-numero');
